@@ -8,6 +8,7 @@ const TeamsList = (props) => {
                 <p>Name:{member.name}</p>
                 <p>Team Name:{member.teamname}</p>
                 <p>Score:{member.score}</p>
+                <button>Edit</button>
                 </>
             ))
             
