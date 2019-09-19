@@ -1,22 +1,65 @@
-import React, { useState } from "react";
-import logo from "./logo.svg";
+import React, { useState, useEffect} from "react";
 import "./App.css";
 import { Route } from "react-router-dom";
 import TeamsList from "../src/Components/TeamsList";
 import Form from "./Components/Form";
+import uuid from "uuid";
 
 const initialTeam = [
   {
+    id: uuid(),
     name: "Mildred",
     role: "Backend Engineer",
     email: "otieno.awuor.m@gmail.com"
   },
-  { name: "Amina", role: "Frontend Engineer", email: "amina@fret.com" },
-  { name: "Baraka", role: "UX designer", email: "baraka@xdesigns.com" }
+  {
+    id: uuid(),
+    name: "Amina",
+    role: "Frontend Engineer",
+    email: "amina@fret.com"
+  },
+  {
+    id: uuid(),
+    name: "Baraka",
+    role: "UX designer",
+    email: "baraka@xdesigns.com"
+  }
 ];
+
+const initialMember = {
+  id: '',
+  name: '',
+  email: '',
+  role: '',
+};
 
 function App() {
   const [teamList, setTeamList] = useState(initialTeam);
+  const [currentUser, setCurrentUser] = useState({});
+  const [memberToEdit, setMemberToEdit] = useState(initialMember);
+
+  
+  const onMemberChange = (event) => {
+    event.preventDefault();
+     for(let  i= 0; i < teamList.length; i++) {
+       if(teamList[i].id === event.target.id) {
+        setCurrentUser(teamList[i]);
+        const newMember = {
+          name: teamList[i].name,
+          email: teamList[i].email,
+          role: teamList[i].role,
+        };
+        console.log(" Current user set",currentUser)
+        console.log("button was clicked", event.target.id)
+        const newTeamList = teamList.concat(newMember);
+        setTeamList(newTeamList);
+        setMemberToEdit(newMember);
+       }
+       return `New user`;
+     }
+   
+    
+    };
 
   const onNameChange = event => {
     setTeamList([
@@ -38,9 +81,14 @@ function App() {
 
   return (
     <div className="App">
+      <h1>Team Members</h1>
       <Route
         render={props => (
-          <TeamsList {...props} initialTeam={initialTeam}></TeamsList>
+          <TeamsList
+            {...props}
+            initialTeam={initialTeam}
+            onMemberChange={onMemberChange}
+          ></TeamsList>
         )}
       ></Route>
       <Route
@@ -50,6 +98,7 @@ function App() {
             onNameChange={onNameChange}
             onEmailChange={onEmailChange}
             onRoleChange={onRoleChange}
+            memberToEdit={memberToEdit}
           ></Form>
         )}
       ></Route>
